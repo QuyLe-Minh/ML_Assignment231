@@ -4,40 +4,15 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 from transformers import BertTokenizer, BertModel, AdamW, get_linear_schedule_with_warmup
 from sklearn.metrics import accuracy_score, classification_report
-import pandas as pd
+from architecture import BERT
 from util import *
-
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
-class Config:
-  model_name = "bert-base-uncased"
-  max_length = 256
-  batch_size = 16
-  num_epochs = 10
-  lr = 1e-3
-  patience = 5
-  epochs = 100
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 config = Config()
 
-class CustomDataset(Dataset):
-  def __init__(self, texts, labels, tokenizer):
-    self.texts = texts
-    self.labels = labels
-    self.tokenizer = tokenizer
-
-  def __len__(self):
-    return len(self.texts)
-
-  def __getitem__(self, index):
-    text = self.texts[index]
-    label = self.labels[index]
-    encoding = self.tokenizer(text, return_tensors='pt', max_length=256, padding='max_length', truncation=True)
-    return {'input_ids': encoding['input_ids'].flatten(), 'attention_mask': encoding['attention_mask'].flatten(), 'label': torch.tensor(label)}
-
-train_X, train_y = load_spam_dataset("/content/spam_train.tsv")
-test_X, test_y = load_spam_dataset("/content/spam_test.tsv")
+train_X, train_y = load_spam_dataset("BERT/spam_train.tsv")
+val_X, val_y = load_spam_dataset("BERT/spam_val.tsv")
+test_X, test_y = load_spam_dataset("BERT/spam_test.tsv")
 
 tokenizer = BertTokenizer.from_pretrained(config.model_name)
 
@@ -98,7 +73,8 @@ model = BERT(config.model_name).to(config.device)
 optimizer = AdamW(model.parameters(), lr=1e-5)
 steps = len(train_loader) * config.epochs
 scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=steps)
-best_one = -1
+
+best_one = 0.99821
 count = 0
 for t in range(config.epochs):
     print(f"Epoch {t+1}\n-------------------------------")
@@ -109,7 +85,7 @@ for t in range(config.epochs):
     if acc > best_one:
       count = 0
       best_one = acc
-      torch.save(model.state_dict(), "BERT.pt")
+      torch.save(model.state_dict(), "BERT/BERT.pt")
     else:
         count+=1
         if count == config.patience:
