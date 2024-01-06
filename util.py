@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 from torch.utils.data import DataLoader, Dataset
-# from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer, BertModel
 import torch
 
 class Config:
