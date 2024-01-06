@@ -3,7 +3,35 @@ import csv
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+from torch.utils.data import DataLoader, Dataset
+from transformers import BertTokenizer, BertModel
+import torch
 
+class Config:
+  model_name = "bert-base-uncased"
+  max_length = 256
+  batch_size = 16
+  num_epochs = 10
+  lr = 1e-3
+  patience = 5
+  epochs = 100
+  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+class CustomDataset(Dataset):
+  def __init__(self, texts, labels, tokenizer, max_length = 256):
+    self.texts = texts
+    self.labels = labels
+    self.tokenizer = tokenizer
+    self.max_length = max_length
+
+  def __len__(self):
+    return len(self.texts)
+
+  def __getitem__(self, index):
+    text = self.texts[index]
+    label = self.labels[index]
+    encoding = self.tokenizer(text, return_tensors='pt', max_length=self.max_length, padding='max_length', truncation=True)
+    return {'input_ids': encoding['input_ids'].flatten(), 'attention_mask': encoding['attention_mask'].flatten(), 'label': torch.tensor(label)}
 
 def add_intercept_fn(x):
     """Add intercept to matrix x.
