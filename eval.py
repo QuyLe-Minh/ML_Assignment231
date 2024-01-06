@@ -8,11 +8,11 @@ import yaml
 from util import *
 
 config = Config()
-test_X, test_y = load_spam_dataset("BERT/spam_test.tsv")
+test_X, test_y = load_spam_dataset("spam_test.tsv")
 
 def BERT_eval():
     model = BERT(config.model_name).to(config.device)
-    model.load_state_dict(torch.load("BERT/BERT.pt"))
+    model.load_state_dict(torch.load("BERT.pt"))
     print("Load successfully")
 
     tokenizer = BertTokenizer.from_pretrained(config.model_name)
@@ -56,6 +56,6 @@ def ML_eval(yaml_path):
 
 def evaluation():
     BERT_eval()
-    ML_eval("BERT/predictions.yaml")
+    ML_eval("predictions.yaml")
 
 evaluation()
