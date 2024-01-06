@@ -12,7 +12,7 @@ class Config:
   max_length = 256
   batch_size = 16
   num_epochs = 10
-  lr = 1e-3
+  lr = 1e-5
   patience = 5
   epochs = 100
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
