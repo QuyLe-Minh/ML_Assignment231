@@ -4,6 +4,7 @@ import numpy as np
 
 import util
 import svm
+import yaml
 
 
 def get_words(message):
@@ -195,6 +196,8 @@ def compute_best_svm_radius(train_matrix, train_labels, val_matrix, val_labels, 
 
 
 def main():
+    yaml_path = "predictions.yaml"
+    data = {}
     train_messages, train_labels = util.load_spam_dataset('spam_train.tsv')
     val_messages, val_labels = util.load_spam_dataset('spam_val.tsv')
     test_messages, test_labels = util.load_spam_dataset('spam_test.tsv')
@@ -215,6 +218,7 @@ def main():
     naive_bayes_model = fit_naive_bayes_model(train_matrix, train_labels)
 
     naive_bayes_predictions = predict_from_naive_bayes_model(naive_bayes_model, test_matrix)
+    data["naive_bayes"] = naive_bayes_predictions.tolist()
 
     np.savetxt('spam_naive_bayes_predictions', naive_bayes_predictions)
 
@@ -235,10 +239,14 @@ def main():
     print('The optimal SVM radius was {}'.format(optimal_radius))
 
     svm_predictions = svm.train_and_predict_svm(train_matrix, train_labels, test_matrix, optimal_radius)
+    data["svm"] = svm_predictions.tolist()
 
     svm_accuracy = np.mean(svm_predictions == test_labels)
 
     print('The SVM model had an accuracy of {} on the testing set'.format(svm_accuracy, optimal_radius))
+
+    with open(yaml_path, 'w') as f:
+        yaml.dump(data, f, default_flow_style=False)
 
 
 if __name__ == "__main__":
