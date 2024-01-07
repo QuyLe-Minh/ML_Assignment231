@@ -2,7 +2,7 @@
 An efficient way for handling text data in Machine Learning
 
 # Introduction
-In this repo, I only demo a method of handling text data on spam classification task using pytorch.
+In this repo, I demo a method of handling text data only on spam classification task using pytorch.
 
 # Prerequisites
 ```sh
