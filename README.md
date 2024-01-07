@@ -18,6 +18,6 @@ python eval.py
 ```
 
 # Resource accessibility
-[paper](https://hcmuteduvn-my.sharepoint.com/:b:/g/personal/quy_leemin_hcmut_edu_vn/EbYNsFCNU6ZGmiDz6jmU9qcBbWSnjJzWXw2630pmCD4wIA?e=sI0w5w) 
+[paper](https://hcmuteduvn-my.sharepoint.com/:b:/g/personal/quy_leemin_hcmut_edu_vn/EcK01X-qHndEh-YG-sOJcboBIoVRJ-o7XTkvLasDQNQc5w?e=oYadEo) 
 
 [model state dict](https://drive.google.com/drive/folders/1oJmhcxM6etUp6w1fRkF6wu50nDboLd2n?usp=sharing)
